@@ -1,14 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import list from "../../public/list.json";
 import Slider from "react-slick";
 import Card from "./card";
+import axios from "axios";
+import { getBook } from "../../../Backend/controller/book.controller";
 
 const Course = () => {
-  const filterData = list.filter((data) => data.category === "Free");
+  const [book, setBook] = useState([]);
+  useEffect(() => {
+    const getBook = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/book");
+        const data = list.filter((data) => data.category === "Free");
+        console.log(res.data);
+        setBook(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getBook();
+  });
+
   //Here suppose you are in excel and free you are searching
-  console.log(filterData);
+
   var settings = {
     dots: true,
     infinite: false,
@@ -23,25 +39,25 @@ const Course = () => {
           slidesToShow: 3,
           slidesToScroll: 3,
           infinite: true,
-          dots: true
-        }
+          dots: true,
+        },
       },
       {
         breakpoint: 600,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 2,
-          initialSlide: 2
-        }
+          initialSlide: 2,
+        },
       },
       {
         breakpoint: 480,
         settings: {
           slidesToShow: 1,
-          slidesToScroll: 1
-        }
-      }
-    ]
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
   return (
     <>
@@ -60,12 +76,12 @@ const Course = () => {
         {/* cards */}
 
         <div className="slider-container">
-      <Slider {...settings}>
-        {filterData.map((item)=>(
-          <Card item={item} key={item.id}></Card>
-        ))}
-      </Slider>
-    </div>
+          <Slider {...settings}>
+            {book.map((item) => (
+              <Card item={item} key={item.id}></Card>
+            ))}
+          </Slider>
+        </div>
       </div>
     </>
   );

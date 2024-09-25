@@ -1,9 +1,14 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import bookRoute from "./route/book.route.js";
+import cors from "cors"
 const app = express();
 
 dotenv.config();
+
+
+app.use(cors())
 //env
 const port = process.env.PORT || 5001;
 const URI = process.env.MongoDBURI;
@@ -24,6 +29,11 @@ try {
 // app.get("/", (req, res) => {
 //   res.send("hello backend");
 // });
+
+
+
+// defining routes
+app.use("/book",bookRoute)
 app.listen(port, () => {
   console.log(`port running on ${port}`);
 });
