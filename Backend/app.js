@@ -1,11 +1,16 @@
-import express from "express";
+import express, { urlencoded } from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import bookRoute from "./route/book.route.js";
 import cors from "cors"
+import userRoute from "./route/user.route.js"
 const app = express();
 
 dotenv.config();
+
+//middleware
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
 
 
 app.use(cors())
@@ -34,6 +39,9 @@ try {
 
 // defining routes
 app.use("/book",bookRoute)
+app.use("/user",userRoute)
+
+
 app.listen(port, () => {
   console.log(`port running on ${port}`);
 });
