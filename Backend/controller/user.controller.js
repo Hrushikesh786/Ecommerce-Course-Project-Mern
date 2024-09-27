@@ -6,7 +6,15 @@ export const signup = async (req, res) => {
     const { fullname, email, password } = req.body;
     const user = await User.findOne({ email });
     if (user) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({
+        message: "User already exists",
+        user: {
+          id: user._id,
+          fullname: user.fullname,
+          email: user.email,
+        },
+      });
+      alert("User already exists");
     }
     const hashPassword = await bcryptjs.hash(password, 10);
     const createdUser = new User({
@@ -15,10 +23,16 @@ export const signup = async (req, res) => {
       password: hashPassword,
     });
     await createdUser.save();
-    res.status(201).json({ message: "User created Successfully" });
+    res.status(201).json({
+      message: "User created Successfully",
+      user: {
+        id: createdUser._id,
+        fullname: createdUser.fullname,
+        email: createdUser.email,
+      },
+    });
   } catch (error) {
-    console.log("Error:" + error.message);
-    res.status(500).json({ message: "interrnal server error" });
+    alert("user already exists");
   }
 };
 
@@ -27,7 +41,7 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-    const isMatch =await bcryptjs.compare(password, user.password);
+    const isMatch = await bcryptjs.compare(password, user.password);
     if (!user || !isMatch) {
       return res.status(401).json({ message: "Invalid Credentials" });
     } else {
@@ -41,7 +55,7 @@ export const login = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log("Error",+error.message);
+    console.log("Error", +error.message);
     return res.status(500).json({ message: "Server Error" });
   }
 };
