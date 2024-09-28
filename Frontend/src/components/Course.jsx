@@ -12,7 +12,7 @@ const Course = () => {
   useEffect(() => {
     const getBook = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/book");
+        const res = await axios.get("http://localhost:5000/book");  
         const data = list.filter((data) => data.category === "Free");
         console.log(res.data);
         setBook(res.data);
